@@ -1,21 +1,22 @@
-// backend/index.js
 const express = require("express");
 const cors = require("cors");
-const dadosRouter = require("./routes/dados");
+const bodyParser = require("body-parser");
 
 const app = express();
-const PORT = process.env.PORT || 3001;
-
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
+// Rota inicial de teste
 app.get("/", (req, res) => {
-  res.send("Servidor Vida+Ativa funcionando! 🚀");
+  res.send("API Vida+Ativa funcionando!");
 });
 
-// rotas
-app.use("/api/dados", dadosRouter);
-
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+// Simulação de recebimento de dados do smartwatch
+app.post("/api/dados", (req, res) => {
+  const dados = req.body;
+  console.log("Dados recebidos:", dados);
+  res.json({ message: "Dados recebidos com sucesso!" });
 });
+
+const PORT = 3001;
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
