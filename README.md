@@ -1,16 +1,17 @@
-# Projeto Vida+Ativa 💚
+# Vida+Ativa — Plataforma de Monitoramento Inteligente para Idosos 
 
-Sistema de monitoramento de saúde e bem-estar mental de idosos com uso de IA e smartwatch.
+Projeto focado em monitorar saúde física e mental de idosos usando:
 
-## Estrutura do Projeto
-- **Backend:** Node.js + Express
-- **IA:** Python + LLM + RAG
-- **Frontend:** React + Tailwind
-- **Banco:** SQLite (prototipagem)
+- Smartwatch conectado ao celular (futuramente via API)
+- Coleta de dados de batimentos, passos, sono e humor
+- IA para análise (LLM + RAG)
+- Sugestões de bem-estar (respiração, caminhada, hidratação)
+- Botão SOS para emergências
 
-## Objetivo
-Analisar dados de sono, humor, atividade física e batimentos cardíacos, sugerindo ações de bem-estar e alertando situações críticas.
+## Tecnologias
+- Backend: Node.js + Express
+- Frontend: React
+- IA: LLM + RAG (em desenvolvimento)
+- Integração: API mock (por enquanto)
 
-## Fluxo
-Smartwatch → Backend → IA → Site
 

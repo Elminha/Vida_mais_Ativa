@@ -1,17 +1,23 @@
 const express = require("express");
 const router = express.Router();
 
-// Simula dados vindos do smartwatch
-router.get("/mock-health", (req, res) => {
-    const fakeData = {
-        heartRate: 82,
-        steps: 3200,
-        temperature: 36.5,
-        spo2: 97,
-        timestamp: new Date().toISOString()
-    };
+// Função para gerar valores aleatórios dentro de um intervalo
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-    res.json(fakeData);
+// Simula dados do smartwatch
+router.get("/mock-health", (req, res) => {
+  const fakeData = {
+    sleep: random(4, 9),           // horas de sono
+    mood: random(1, 10),           // humor de 1 a 10
+    heartRate: random(60, 110),     // bpm
+    steps: random(1000, 9000),      // passos do dia
+    activity: random(10, 120),      // minutos de atividade física
+    timestamp: new Date().toISOString()
+  };
+
+  res.json(fakeData);
 });
 
 module.exports = router;
