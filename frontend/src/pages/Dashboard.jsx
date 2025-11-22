@@ -1,100 +1,39 @@
-import React, { useEffect, useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
+import { Box, Heading, SimpleGrid } from "@chakra-ui/react";
+import StatCard from "../components/StatCard";
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-  const [history, setHistory] = useState([]);
+  const [data, setData] = useState(null);
 
-  // Busca dados simulados do backend
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetch("http://localhost:3001/mock-health")
-        .then((res) => res.json())
-        .then((data) => {
-          setHistory((prev) => [...prev, data].slice(-20)); // mantém só os últimos 20 pontos
-        })
-        .catch((err) => console.error("Erro ao buscar dados:", err));
-    }, 3000);
+    async function loadData() {
+      try {
+        const response = await fetch("http://localhost:3000/monitoramento");
+        const json = await response.json();
+        setData(json);
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+      }
+    }
 
-    return () => clearInterval(interval);
+    loadData();
   }, []);
 
-  const last = history[history.length - 1];
+  if (!data) {
+    return <Heading p={5}>Carregando dados...</Heading>;
+  }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2 style={{ marginBottom: "20px" }}>Dashboard — Monitoramento</h2>
+    <Box p={6}>
+      <Heading mb={6}>Dashboard de Saúde</Heading>
 
-      {/* CARDS */}
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          marginBottom: "30px",
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={card}>
-          <h3>😴 Sono</h3>
-          <p style={valor}>{last?.sleep ?? "--"} h</p>
-        </div>
-
-        <div style={card}>
-          <h3>😊 Humor</h3>
-          <p style={valor}>{last?.mood ?? "--"}/10</p>
-        </div>
-
-        <div style={card}>
-          <h3>❤️ Batimentos</h3>
-          <p style={valor}>{last?.heartRate ?? "--"} bpm</p>
-        </div>
-
-        <div style={card}>
-          <h3>👣 Passos</h3>
-          <p style={valor}>{last?.steps ?? "--"}</p>
-        </div>
-
-        <div style={card}>
-          <h3>🏃 Atividade física</h3>
-          <p style={valor}>{last?.activity ?? "--"} min</p>
-        </div>
-      </div>
-
-      {/* GRÁFICO PRINCIPAL */}
-      <h3>Gráfico — Batimentos Cardíacos</h3>
-
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={history}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="timestamp" hide />
-          <YAxis />
-          <Tooltip />
-          <Line type="monotone" dataKey="heartRate" stroke="#ff4444" />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+      <SimpleGrid columns={[1, 2, 3]} spacing={6}>
+        <StatCard title="Sono (horas)" value={data.sleep_hours} />
+        <StatCard title="Humor" value={data.mood} />
+        <StatCard title="Batimentos (bpm)" value={data.heart_rate} />
+        <StatCard title="Atividade Física (min)" value={data.physical_activity} />
+        <StatCard title="Passos" value={data.steps} />
+      </SimpleGrid>
+    </Box>
   );
 }
-
-// Estilos
-const card = {
-  padding: "20px",
-  background: "#f4f4f4",
-  borderRadius: "12px",
-  width: "200px",
-  textAlign: "center",
-  boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-};
-
-const valor = {
-  fontSize: "32px",
-  margin: 0,
-  fontWeight: "bold",
-};
